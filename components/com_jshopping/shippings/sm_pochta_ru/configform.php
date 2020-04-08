@@ -1,6 +1,6 @@
 <?php 
 /**
-* @version      1.3.1 29.02.2020
+* @version      1.4.0 08.04.2020
 * @author       Sergey Tolkachyov
 * @copyright    Copyright (C) 2019 Sergey Tolkachyov. All rights reserved.
 * @license      GNU/GPL
@@ -126,13 +126,56 @@ defined('_JEXEC') or die('Restricted access');?>
 
         <hr/>
         <div class="row-fluid">
-            <div class="span6">
+            <div class="span2">
                 <p><strong>Отладка</strong><br/><small>Показывать отладочную информацию во фронтэнде.</small></p>
             </div>
-            <div class="span6">
+            <div class="span2">
                 <ul class="unstyled">
                     <li><input type="radio" id="params_debug0" name="params[debug]" value="1" <?php echo $checkedYes; ?>> Показать</li>
-                    <li><input type="radio" id="jform_params_debug1" name="params[debug]" value="0" <?php echo $checkedNo; ?>> Скрыть</li>
+                    <li><input type="radio" id="params_debug1" name="params[debug]" value="0" <?php echo $checkedNo; ?>> Скрыть</li>
+                </ul>
+            </div>
+			<div class="span2">
+                <p><strong>Ошибки расчета доставки</strong><br/><small>Показывать ошибки расчета доставки на шаге выбора способа доставки (фронтенд)?</small></p>
+            </div>
+            <div class="span2">
+			  <?php
+                $display_errors_checked = $config['display_errors'];
+                if ($display_errors_checked == 1){
+                    $display_errors_checked_yes = 'checked="checked"';
+                } else {
+                    $display_errors_checked_no = 'checked="checked"';
+                }
+                ?>
+			
+                <ul class="unstyled">
+                    <li><input type="radio" id="params_debug0" name="params[display_errors]" value="1" <?php echo $display_errors_checked_yes; ?>> Показать</li>
+                    <li><input type="radio" id="params_debug1" name="params[display_errors]" value="0" <?php echo $display_errors_checked_no; ?>> Скрыть</li>
+                </ul>
+            </div>
+			<div class="span2">
+                <p><strong>При стоимости доставки "0" способ доставки сделать...</strong><br/>
+				<small><strong>Без изменений</strong> - способ доставки с нулевой ценой можно выбрать</small><br/>
+				<small><strong>Сделать неактивным</strong> - способ доставки с нулевой ценой будет виден, но его нельзя будет выбрать</small><br/>
+				<small><strong>Скрыть</strong> - способ доставки с нулевой ценой будет сделан неактивным и скрыт от пользователя, его нельзя будет выбрать</small></p>
+				<p>Как правило нулевая цена возникает из-за того, что сервер Почты России не получает всю необходимую информацию, пользователем заполнены не все поля.</p>
+            </div>
+            <div class="span2">
+			  <?php
+                $zero_cost_checked = $config['zero_cost'];
+                if ($zero_cost_checked == 0){
+                    $display_errors_checked_0 = 'checked="checked"';
+                } elseif($zero_cost_checked == 1) {
+                    $display_errors_checked_1 = 'checked="checked"';
+                } elseif($zero_cost_checked == 2) {
+                    $display_errors_checked_2 = 'checked="checked"';
+                }
+                ?>
+			
+                <ul class="unstyled">
+					<li><input type="radio" id="params_debug1" name="params[zero_cost]" value="0" <?php echo $display_errors_checked_0; ?>> Оставить без изменений</li>
+					<li><input type="radio" id="params_debug0" name="params[zero_cost]" value="1" <?php echo $display_errors_checked_1; ?>> Сделать неактивным</li>
+                    <li><input type="radio" id="params_debug0" name="params[zero_cost]" value="2" <?php echo $display_errors_checked_2; ?>> Скрыть</li>
                 </ul>
             </div>
         </div>

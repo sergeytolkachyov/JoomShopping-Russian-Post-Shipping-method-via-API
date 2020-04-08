@@ -1,6 +1,6 @@
 <?php
 /**
-* @version      1.3.1 29.02.2020
+* @version      1.4.0 08.04.2020
 * @author       Sergey Tolkachyov
 * @copyright    Copyright (C) 2019 Sergey Tolkachyov. All rights reserved.
 * @license      GNU/GPL
@@ -53,7 +53,20 @@ class sm_pochta_ru extends shippingextRoot{
                 $price_shipping = '0';
             }
 			
-			
+			if($sm_params["zero_cost"] == 1 && ($price_shipping == '0' or $price_shipping == '')){
+				echo " <script>
+					jQuery(document).ready(function(){
+						jQuery('input#shipping_method_".$shipping_method_price->shipping_method_id."').attr('disabled','disabled');
+					});
+			</script>";
+			}elseif($sm_params["zero_cost"] == 2 && ($price_shipping == '0' or $price_shipping == '')){
+				echo " <script>
+					jQuery(document).ready(function(){
+						jQuery('input#shipping_method_".$shipping_method_price->shipping_method_id."').attr('disabled','disabled').css('display','none');
+						jQuery('label[for=shipping_method_".$shipping_method_price->shipping_method_id."]').css('display','none');
+					});
+			</script>";
+			}
 
             return $price_shipping;
 
@@ -65,6 +78,7 @@ class sm_pochta_ru extends shippingextRoot{
     {
 
 		$debug = (!empty($sm_params['debug'])) ? (int)$sm_params['debug'] : 0;
+		$display_errors = (!empty($sm_params['display_errors'])) ? (int)$sm_params['display_errors'] : 0;
         $price_tax = (!empty($sm_params['price_tax'])) ? (int)$sm_params['price_tax'] : 0;
         $weight_factor = (float)str_replace(',', '.', $sm_params['weight_factor']);
         $weight_factor = ($weight_factor == 0) ? $weight_factor = 1 : $weight_factor;
@@ -95,7 +109,7 @@ class sm_pochta_ru extends shippingextRoot{
 		}
 		$weightForDebug = $weight;
 
-		if($weight > 31500){
+		if($weight > 31500 && $display_errors == 1){
 			$how_many_orders = ceil($weight/31500);
 			
 			echo "<div class='alert alert-danger'>
@@ -144,7 +158,7 @@ class sm_pochta_ru extends shippingextRoot{
 				$url = "https://tariff.pochta.ru/tariff/v1/calculate?jsontext".$object_type.$index_from.$index_to.$weight.$pack.$sumoc.$sumnp;
 				$url_json = file_get_contents($url);
 				$tariff_array = json_decode($url_json, true);
-				if ($tariff_array["error"]){
+				if ($tariff_array["error"] && $display_errors == 1){
 					echo "<div class=\"alert alert-danger\"><span class=\"alert-link\">Ошибка рассчета доставки:</span> <br/>".$tariff_array["error"][0]."<br/><span class=\"alert-link\">Свяжитесь, пожалуйста, с администратором сайта.</span></div>";
 				}
 				if ($url_json == false){
@@ -172,7 +186,7 @@ class sm_pochta_ru extends shippingextRoot{
 						echo '<div class="well well-sm">';
 								echo '<br/>Минимальный вес отправления = <span class="label label-info">'.$minweight." грамм</span>";
 								echo '<br/>Размер НДС = <span class="label label-info">';
-								if ($ndsrate){echo $ndsrate;} else{echo "Показ НДС выключен";}
+								if ($showNDS == 1){echo "Размер НДС:".$ndsrate;} else{echo "Показ НДС выключен";}
 								echo '</span>';
 								
 						echo '<br/>Общая стоимость доставки Почтой России с учетом всех коэффициентов = '.$prices;

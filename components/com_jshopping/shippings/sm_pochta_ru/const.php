@@ -1,6 +1,6 @@
 <?php
 /**
-* @version      1.3.1 29.02.2020
+* @version      1.4.0 08.04.2020
 * @author       Sergey Tolkachyov
 * @copyright    Copyright (C) 2019 Sergey Tolkachyov. All rights reserved.
 * @license      GNU/GPL
